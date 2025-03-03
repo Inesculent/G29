@@ -161,7 +161,8 @@ PlayerSettings:
   resetResolutionOnWindowResize: 0
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
-  applicationIdentifier: {}
+  applicationIdentifier:
+    Standalone: com.DefaultCompany.Group-29
   buildNumber:
     Standalone: 0
     VisionOS: 0
@@ -681,8 +682,8 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: Group 29
-  metroPackageVersion: 
+  metroPackageName: Group29
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -690,7 +691,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: Group 29
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: Group 29
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
