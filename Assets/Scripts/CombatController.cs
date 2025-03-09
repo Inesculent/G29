@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class CombatController : MonoBehaviour
@@ -7,7 +8,7 @@ public class CombatController : MonoBehaviour
     public float punchDamage = 10f; // Damage dealt to the enemy
     public float dodgeWindow = 0.5f; // Time frame for dodging
 
-    private bool isDodging = false;
+    private bool isDodging = false; // Tracks whether the player is dodging
     private float dodgeTimer = 0f;
 
     public Transform punchPoint; // Empty GameObject positioned at the player's fist
@@ -37,32 +38,38 @@ public class CombatController : MonoBehaviour
     }
 
     void Punch()
-{
-    Debug.Log("Punch() called!");
-
-    Collider[] hitEnemies = Physics.OverlapSphere(punchPoint.position, punchRadius, enemyLayer);
-
-    Debug.Log("Enemies hit: " + hitEnemies.Length);
-
-    foreach (Collider enemy in hitEnemies)
     {
-        Debug.Log("Hit object: " + enemy.name); // Shows what objects are hit
+        Debug.Log("🔴 Punch attack triggered!");
 
-        Health enemyHealth = enemy.GetComponent<Health>();
+        // Delay hit detection slightly for animation sync
+        StartCoroutine(DelayedPunchDamage(0.2f)); // Adjust timing based on animation
+    }
 
-        if (enemyHealth != null)
+    IEnumerator DelayedPunchDamage(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        Collider[] hitEnemies = Physics.OverlapSphere(punchPoint.position, punchRadius, enemyLayer);
+
+        Debug.Log("🟠 Objects hit: " + hitEnemies.Length);
+
+        foreach (Collider hit in hitEnemies)
         {
-            Debug.Log("Health component found on " + enemy.name);
-            enemyHealth.TakeDamage((int)punchDamage);
-            Debug.Log("Punch landed on " + enemy.name);
-        }
-        else
-        {
-            Debug.LogWarning("⚠️ No Health component found on " + enemy.name);
+            Debug.Log("🟡 Hit object: " + hit.name);
+
+            Health enemyHealth = hit.GetComponent<Health>() ?? hit.GetComponentInParent<Health>();
+
+            if (enemyHealth != null)
+            {
+                Debug.Log("✅ Health component found on " + hit.name);
+                enemyHealth.TakeDamage((int)punchDamage);
+            }
+            else
+            {
+                Debug.LogWarning("⚠️ No Health component found on " + hit.name);
+            }
         }
     }
-}
-
 
     void StartDodge()
     {
@@ -71,15 +78,9 @@ public class CombatController : MonoBehaviour
         Debug.Log("Player is dodging!");
     }
 
+    // Public method so EnemyAI can check if the player is dodging
     public bool IsDodging()
     {
         return isDodging;
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        if (punchPoint == null) return;
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(punchPoint.position, punchRadius);
     }
 }
