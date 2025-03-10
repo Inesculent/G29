@@ -11,7 +11,7 @@ public class Health : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
-        UpdateHealthBar();
+        healthBar.value=maxHealth;
     }
 
     public void TakeDamage(int damage)
@@ -19,7 +19,7 @@ public class Health : MonoBehaviour
         currentHealth -= damage;
         if (currentHealth < 0) currentHealth = 0;
         Debug.Log(gameObject.name + " took " + damage + " damage! Current HP: " + currentHealth);
-        UpdateHealthBar();
+        healthBar.value = currentHealth;
 
         // Trigger red flash effect when taking damage
         UIManager.Instance?.ShowDamageFlash();
@@ -35,20 +35,14 @@ public class Health : MonoBehaviour
     {
         currentHealth += amount;
         if (currentHealth > maxHealth) currentHealth = maxHealth;
-        UpdateHealthBar();
+        healthBar.value = currentHealth;
     }
 
     public void ResetHealth()
     {
         currentHealth = maxHealth;
-        UpdateHealthBar();
+        healthBar.value = maxHealth;
         Debug.Log(gameObject.name + " health reset to " + maxHealth);
-    }
-
-    void UpdateHealthBar()
-    {
-        if (healthBar)
-            healthBar.value = (float)currentHealth / maxHealth;
     }
 
     void HandleDeath()
