@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "G29.sln"
+    "dotnet.defaultSolution": "Group 29.sln"
 }
