@@ -26,6 +26,11 @@ public class LogRecorder : MonoBehaviour
 
         // Subscribe to log event
         Application.logMessageReceived += HandleLog;
+
+        // Print and log the file path
+        string startupMessage = $"Log file created at: {logFilePath}";
+        Debug.Log(startupMessage);  // Print to console
+        logWriter.WriteLine(startupMessage);  // Record in log file
     }
 
     void HandleLog(string logString, string stackTrace, LogType type)
@@ -47,4 +52,3 @@ public class LogRecorder : MonoBehaviour
         logWriter?.Close();
     }
 }
-
