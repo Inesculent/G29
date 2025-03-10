@@ -3,22 +3,17 @@ using UnityEngine;
 
 public class TimeLoopManager : MonoBehaviour
 {
-    public static TimeLoopManager Instance { get; private set; }
-
+    public static TimeLoopManager Instance;
+    
     public float respawnOffset = 2f;
     public float loopCooldown = 1.5f;
 
     private void Awake()
     {
-        // Ensure only one instance exists
         if (Instance == null)
-        {
             Instance = this;
-        }
         else
-        {
             Destroy(gameObject);
-        }
     }
 
     public void TriggerTimeLoop(Vector3 deathPosition)
@@ -29,8 +24,12 @@ public class TimeLoopManager : MonoBehaviour
 
     private IEnumerator RespawnPlayer(Vector3 respawnPosition)
     {
+        UIManager.Instance.FadeOut(); // Fade to black
         yield return new WaitForSeconds(loopCooldown);
+
         PlayerController.Instance.RespawnAt(respawnPosition);
+
+        UIManager.Instance.FadeIn(); // Fade back in
         StateManager.Instance.ResetWorld();
     }
 }

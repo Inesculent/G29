@@ -11,11 +11,13 @@ public class PlayerController : MonoBehaviour
         else
             Destroy(gameObject);
     }
-
-    public void RespawnAt(Vector3 respawnPosition)
-    {
-        transform.position = respawnPosition; // Move player to respawn point
-    }
+public void RespawnAt(Vector3 respawnPosition)
+{
+    transform.position = respawnPosition;
+    
+    // Reset player's health when they respawn
+    GetComponent<Health>().ResetHealth();
+}
 
     public void Die()
     {

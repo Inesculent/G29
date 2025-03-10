@@ -13,20 +13,27 @@ public class Health : MonoBehaviour
         currentHealth = maxHealth;
         UpdateHealthBar();
     }
+public void TakeDamage(int damage)
+{
+    currentHealth -= damage;
+    if (currentHealth < 0) currentHealth = 0;
+    Debug.Log(gameObject.name + " took " + damage + " damage! Current HP: " + currentHealth);
+    UpdateHealthBar();
 
-    public void TakeDamage(int damage)
+    // Trigger red flash effect
+    UIManager.Instance?.ShowDamageFlash();
+
+    if (currentHealth == 0)
     {
-        currentHealth -= damage;
-        if (currentHealth < 0) currentHealth = 0;
-        Debug.Log(gameObject.name + " took " + damage + " damage! Current HP: " + currentHealth);
-        UpdateHealthBar();
-
-        // Check if the entity is dead
-        if (currentHealth == 0)
-        {
-            HandleDeath();
-        }
+        HandleDeath();
     }
+}
+public void ResetHealth()
+{
+    currentHealth = maxHealth;
+    UpdateHealthBar();
+    Debug.Log(gameObject.name + " health reset to " + maxHealth);
+}
 
     public void Heal(int amount)
     {
@@ -41,17 +48,19 @@ public class Health : MonoBehaviour
             healthBar.value = (float)currentHealth / maxHealth;
     }
 
-    void HandleDeath()
+ void HandleDeath()
+{
+    if (CompareTag("Player"))
     {
-        if (gameObject.CompareTag("Player")) // If it's the player
-        {
-            Debug.Log("Player has died! Initiating time loop...");
-            TimeLoopManager.Instance?.TriggerTimeLoop(transform.position);
-        }
-        else
-        {
-            Debug.Log(gameObject.name + " has died!");
-            gameObject.SetActive(false); // Deactivate enemy
-        }
+        Debug.Log("Player has died! Initiating time loop...");
+        TimeLoopManager.Instance?.TriggerTimeLoop(transform.position);
     }
+    else if (CompareTag("Enemy"))
+    {
+        Debug.Log(gameObject.name + " has died! Marking as defeated.");
+        StateManager.Instance?.RegisterDefeatedEnemy(gameObject.name);
+        gameObject.SetActive(false);
+    }
+}
+
 }
