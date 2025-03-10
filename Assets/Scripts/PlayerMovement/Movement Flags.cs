@@ -54,7 +54,7 @@ public class MovementFlags : MonoBehaviour
         // Detect Punch Input
 if (Input.GetKeyDown(KeyCode.F)) // Punch
 {
-    animator.SetBool("Crouching", false); // Disable crouch
+    animator.SetBool("Crouch", false); // Disable crouch
     animator.SetTrigger("Punch");
     Debug.Log("✅ Crouch disabled → Punch triggered!");
 }
