@@ -35,12 +35,10 @@ public class PlayerMovement : MonoBehaviour
     {
         moveAction.Enable();
         dashAction.Enable();
-        dashAction.performed += OnDash;
     }
-
+    
     private void OnDisable()
     {
-        dashAction.performed -= OnDash;
         moveAction.Disable();
         dashAction.Disable();
     }
@@ -71,13 +69,13 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = direction * movementSpeed;
     }
 
-    public void OnDash(InputAction.CallbackContext context)
-    {
-        if (Time.time >= lastDashTime + dashCooldown && movementInput != Vector2.zero)
+        public void OnDash()
         {
-            isDashing = true;
-            dashTimer = 0f;
-            lastDashTime = Time.time;
+            if (Time.time >= lastDashTime + dashCooldown && movementInput != Vector2.zero)
+            {
+                isDashing = true;
+                dashTimer = 0f;
+                lastDashTime = Time.time;
+            }
         }
     }
-}
