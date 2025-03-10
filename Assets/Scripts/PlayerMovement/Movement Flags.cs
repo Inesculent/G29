@@ -50,5 +50,13 @@ public class MovementFlags : MonoBehaviour
         animator.SetBool("Jump", isJumping);
         animator.SetBool("Moving", isMoving);
         animator.SetBool("Grounded", isGrounded);
+
+        // Detect Punch Input
+if (Input.GetKeyDown(KeyCode.F)) // Punch
+{
+    animator.SetBool("Crouch", false); // Disable crouch
+    animator.SetTrigger("Punch");
+}
+
     }
 }
