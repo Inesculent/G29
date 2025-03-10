@@ -32,6 +32,10 @@ public class PlayerActions : MonoBehaviour
 
     private void Update()
     {
+        if (UseText == null)
+        {
+            return;
+        }
         if (Physics.Raycast(Camera.position, Camera.forward, out RaycastHit hit, MaxUseDistance, UseLayers)
             && hit.collider.TryGetComponent<Door>(out Door door))
         {

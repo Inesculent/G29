@@ -80,7 +80,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E) && canMove)
         {
-            GetComponent<PlayerActions>().OnUse();
+            var playerActions = GetComponent<PlayerActions>();
+            if (playerActions != null)
+            {
+                playerActions.OnUse();
+                print("used");
+            }
         }
 
     
