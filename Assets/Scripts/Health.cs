@@ -6,34 +6,30 @@ public class Health : MonoBehaviour
     public int maxHealth = 100;
     private int currentHealth;
 
-    public Slider healthBar; // Assign in Inspector
+    public Slider healthBar; // Assign this in the Inspector
 
     void Start()
     {
         currentHealth = maxHealth;
         UpdateHealthBar();
     }
-public void TakeDamage(int damage)
-{
-    currentHealth -= damage;
-    if (currentHealth < 0) currentHealth = 0;
-    Debug.Log(gameObject.name + " took " + damage + " damage! Current HP: " + currentHealth);
-    UpdateHealthBar();
 
-    // Trigger red flash effect
-    UIManager.Instance?.ShowDamageFlash();
-
-    if (currentHealth == 0)
+    public void TakeDamage(int damage)
     {
-        HandleDeath();
+        currentHealth -= damage;
+        if (currentHealth < 0) currentHealth = 0;
+        Debug.Log(gameObject.name + " took " + damage + " damage! Current HP: " + currentHealth);
+        UpdateHealthBar();
+
+        // Trigger red flash effect when taking damage
+        UIManager.Instance?.ShowDamageFlash();
+
+        // Check if entity is dead
+        if (currentHealth == 0)
+        {
+            HandleDeath();
+        }
     }
-}
-public void ResetHealth()
-{
-    currentHealth = maxHealth;
-    UpdateHealthBar();
-    Debug.Log(gameObject.name + " health reset to " + maxHealth);
-}
 
     public void Heal(int amount)
     {
@@ -42,25 +38,31 @@ public void ResetHealth()
         UpdateHealthBar();
     }
 
+    public void ResetHealth()
+    {
+        currentHealth = maxHealth;
+        UpdateHealthBar();
+        Debug.Log(gameObject.name + " health reset to " + maxHealth);
+    }
+
     void UpdateHealthBar()
     {
         if (healthBar)
             healthBar.value = (float)currentHealth / maxHealth;
     }
 
- void HandleDeath()
-{
-    if (CompareTag("Player"))
+    void HandleDeath()
     {
-        Debug.Log("Player has died! Initiating time loop...");
-        TimeLoopManager.Instance?.TriggerTimeLoop(transform.position);
+        if (CompareTag("Player")) // If the player dies, trigger the time loop
+        {
+            Debug.Log("Player has died! Initiating time loop...");
+            TimeLoopManager.Instance?.TriggerTimeLoop(transform.position);
+        }
+        else if (CompareTag("Enemy")) // If an enemy dies, remove them from the game
+        {
+            Debug.Log(gameObject.name + " has died! Marking as defeated.");
+            StateManager.Instance?.RegisterDefeatedEnemy(gameObject.name);
+            gameObject.SetActive(false); // Disable enemy instead of destroying it
+        }
     }
-    else if (CompareTag("Enemy"))
-    {
-        Debug.Log(gameObject.name + " has died! Marking as defeated.");
-        StateManager.Instance?.RegisterDefeatedEnemy(gameObject.name);
-        gameObject.SetActive(false);
-    }
-}
-
 }
