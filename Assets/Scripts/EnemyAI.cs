@@ -10,6 +10,7 @@ public class EnemyAI : MonoBehaviour
     public Transform attackPoint;
     public LayerMask playerLayer;
 
+    [SerializeField] private Animator animator;
     [SerializeField] private Health playerHealth; // Player Health script reference
     [SerializeField] private CombatController playerCombat; // Player Combat script reference
 
@@ -21,6 +22,9 @@ public class EnemyAI : MonoBehaviour
 
         if (playerCombat == null)
             playerCombat = GameObject.FindWithTag("Player")?.GetComponent<CombatController>();
+
+        if (animator == null)
+            animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -32,6 +36,13 @@ public class EnemyAI : MonoBehaviour
             AttemptAttack();
             attackTimer = 0f;
         }
+
+        //Use for testing
+        //Uses R to rest player's health to max
+        //if (Input.GetKeyDown(KeyCode.R))
+        //{
+        //    playerHealth.ResetHealth();
+        //}
     }
 
     void AttemptAttack()
@@ -40,14 +51,17 @@ public class EnemyAI : MonoBehaviour
 
         foreach (Collider player in hitPlayers)
         {
+
             if (playerCombat != null && playerCombat.IsDodging())
             {
+                animator.SetTrigger("Punch");
                 Debug.Log("Player dodged the attack!");
                 return;
             }
 
             if (playerHealth != null)
             {
+                animator.SetTrigger("Punch");
                 playerHealth.TakeDamage(attackDamage);
                 Debug.Log("Enemy attacked player!");
             }
