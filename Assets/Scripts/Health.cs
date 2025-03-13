@@ -50,7 +50,7 @@ public class Health : MonoBehaviour
         if (CompareTag("Player")) // If the player dies, trigger the time loop
         {
             Debug.Log("Player has died! Initiating time loop...");
-            TimeLoopManager.Instance?.TriggerTimeLoop(transform.position);
+            TimeLoopManager.Instance?.TriggerTimeLoop();
         }
         else if (CompareTag("Enemy")) // If an enemy dies, remove them from the game
         {

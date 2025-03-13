@@ -18,7 +18,7 @@ public class PlayerCam : MonoBehaviour
         Cursor.visible = false;
     }
     
-    private void Update()
+    private void LateUpdate()
     {
         // Use the new Input System to get mouse delta
         Vector2 mouseDelta = Mouse.current.delta.ReadValue();
@@ -33,6 +33,14 @@ public class PlayerCam : MonoBehaviour
 
         // Apply rotations to the camera and orientation
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
-        orientation.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+        orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+    }
+
+    public void SyncCameraRotation()
+    {
+        Vector3 newEuler = transform.eulerAngles;
+        xRotation = newEuler.x;
+        yRotation = newEuler.y;
+        orientation.rotation = Quaternion.Euler(0, newEuler.y, 0);
     }
 }

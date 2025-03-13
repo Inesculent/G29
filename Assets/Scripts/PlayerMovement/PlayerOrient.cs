@@ -5,7 +5,7 @@ public class PlayerOrient : MonoBehaviour
     // Assign the camera Transform in the Inspector
     public Transform cameraTransform;
 
-    void Update()
+    void LateUpdate()
     {
         if (cameraTransform != null)
         {
