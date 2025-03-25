@@ -5,7 +5,9 @@ public class PlayerController : MonoBehaviour
     public static PlayerController Instance;
 
     private Health healthComponent;
-    private PlayerMovements playerMovements;
+    private Rigidbody rb;
+    private PlayerMovements playerMovement;
+    private CharacterController characterController;
 
     private void Awake()
     {
@@ -15,39 +17,58 @@ public class PlayerController : MonoBehaviour
             Destroy(gameObject);
 
         healthComponent = GetComponent<Health>();
-        playerMovements = GetComponent<PlayerMovements>(); // Reference to movement script
+        rb = GetComponent<Rigidbody>();
+        playerMovement = GetComponent<PlayerMovements>();
+        characterController = GetComponent<CharacterController>();
     }
 
     public void RespawnAt(Vector3 position)
     {
         Debug.Log("Respawning player...");
 
-        // Disable movement temporarily
-        if (playerMovements != null)
+        // Disable movement and character controller
+        if (playerMovement != null)
+            playerMovement.enabled = false;
+
+        if (rb != null)
         {
-            playerMovements.SetCanMove(false);
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
         }
+
+        if (characterController != null)
+            characterController.enabled = false;
 
         // Move the player to respawn location
         transform.position = position;
 
-        // Restore health
+        // Reset health
         healthComponent.ResetHealth();
 
-        // Re-enable movement after short delay
+        // Re-enable movement and physics after a short delay
         Invoke(nameof(ReenableMovement), 0.1f);
     }
 
     private void ReenableMovement()
     {
-        if (playerMovements != null)
-        {
-            playerMovements.SetCanMove(true);
-        }
+        if (characterController != null)
+            characterController.enabled = true;
 
-        // Sync camera orientation post-respawn
-        FindObjectOfType<PlayerCam>()?.SyncCameraRotation();
+        if (rb != null)
+            rb.isKinematic = false;
+
+        if (playerMovement != null)
+            playerMovement.enabled = true;
 
         Debug.Log("Movement re-enabled after respawn.");
+
+        // Optional: re-sync camera orientation
+        PlayerCam cam = GetComponentInChildren<PlayerCam>();
+        if (cam != null)
+        {
+            cam.SyncCameraRotation();
+        }
     }
 }
+
