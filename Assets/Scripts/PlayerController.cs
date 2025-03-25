@@ -1,11 +1,12 @@
 using UnityEngine;
+
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance;
 
     private Health healthComponent;
-    private Rigidbody rb;
-    private PlayerMovement playerMovement; 
+    private PlayerMovements playerMovements;
+
     private void Awake()
     {
         if (Instance == null)
@@ -14,8 +15,7 @@ public class PlayerController : MonoBehaviour
             Destroy(gameObject);
 
         healthComponent = GetComponent<Health>();
-        rb = GetComponent<Rigidbody>();
-        playerMovement = GetComponent<PlayerMovement>(); // Reference to movement script
+        playerMovements = GetComponent<PlayerMovements>(); // Reference to movement script
     }
 
     public void RespawnAt(Vector3 position)
@@ -23,15 +23,9 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Respawning player...");
 
         // Disable movement temporarily
-        if (playerMovement != null)
-            playerMovement.enabled = false;
-
-        // Freeze Rigidbody before teleporting to avoid physics glitches
-        if (rb != null)
+        if (playerMovements != null)
         {
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            rb.isKinematic = true;
+            playerMovements.SetCanMove(false);
         }
 
         // Move the player to respawn location
@@ -40,17 +34,19 @@ public class PlayerController : MonoBehaviour
         // Restore health
         healthComponent.ResetHealth();
 
-        // Reactivate physics and movement after a short delay
+        // Re-enable movement after short delay
         Invoke(nameof(ReenableMovement), 0.1f);
     }
 
     private void ReenableMovement()
     {
-        if (rb != null)
-            rb.isKinematic = false; // Re-enable Rigidbody physics
+        if (playerMovements != null)
+        {
+            playerMovements.SetCanMove(true);
+        }
 
-        if (playerMovement != null)
-            playerMovement.enabled = true; // Re-enable movement script
+        // Sync camera orientation post-respawn
+        FindObjectOfType<PlayerCam>()?.SyncCameraRotation();
 
         Debug.Log("Movement re-enabled after respawn.");
     }
