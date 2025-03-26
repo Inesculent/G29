@@ -11,6 +11,8 @@ public class TimeLoopManager : MonoBehaviour
     public float respawnOffset = 2f;
     public float loopCooldown = 1.5f;
 
+    public int loopCount = 0;
+
     private void Awake()
     {
         if (Instance == null)
@@ -19,7 +21,6 @@ public class TimeLoopManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    // Now call this function without parameters.
     public void TriggerTimeLoop()
     {
         if (respawnTransform == null)
@@ -27,7 +28,12 @@ public class TimeLoopManager : MonoBehaviour
             Debug.LogError("Respawn Transform not assigned in the inspector.");
             return;
         }
+
+        loopCount++;
+        Debug.Log($"Time Loop Triggered. Current Loop Count: {loopCount}");
+        UIManager.Instance?.UpdateLoopCounter(loopCount);
         StartCoroutine(RespawnPlayer());
+        
     }
 
     private IEnumerator RespawnPlayer()
@@ -35,9 +41,8 @@ public class TimeLoopManager : MonoBehaviour
         UIManager.Instance?.FadeOut(); // Fade to black
         yield return new WaitForSeconds(loopCooldown);
 
-        // Calculate a safe respawn position using the object's position.
         Vector3 respawnPosition = GetSafeRespawnPosition(respawnTransform.position);
-        PlayerController.Instance.RespawnAt(respawnPosition); // Move player
+        PlayerController.Instance.RespawnAt(respawnPosition);
 
         UIManager.Instance?.FadeIn(); // Fade back in
         StateManager.Instance?.ResetWorld();
@@ -48,8 +53,9 @@ public class TimeLoopManager : MonoBehaviour
         Vector3 respawnPosition = originPosition + new Vector3(respawnOffset, 0, respawnOffset);
         if (Physics.Raycast(respawnPosition + Vector3.up * 2, Vector3.down, out RaycastHit hit, 4f))
         {
-            return hit.point; // Snap to the ground level
+            return hit.point;
         }
         return respawnPosition;
     }
 }
+

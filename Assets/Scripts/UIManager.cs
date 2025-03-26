@@ -1,15 +1,20 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using TMPro; // ✅ Needed for TextMeshProUGUI
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
+    [Header("Screen Effects")]
     public Image screenOverlay; // For fading in/out
-    public Image damageFlash; // For red flash effect
+    public Image damageFlash;   // For red flash effect
     public float fadeDuration = 1.5f;
     public float damageFlashDuration = 0.2f;
+
+    [Header("Loop Counter UI")]
+    public TextMeshProUGUI loopCounterText; // ✅ Assign in Inspector
 
     private void Awake()
     {
@@ -17,6 +22,15 @@ public class UIManager : MonoBehaviour
             Instance = this;
         else
             Destroy(gameObject);
+    }
+
+    // ✅ Public method to update loop counter UI
+    public void UpdateLoopCounter(int count)
+    {
+        if (loopCounterText != null)
+        {
+            loopCounterText.text = $"Loops: {count}";
+        }
     }
 
     public void FadeIn()
@@ -63,3 +77,4 @@ public class UIManager : MonoBehaviour
         damageFlash.color = color;
     }
 }
+
