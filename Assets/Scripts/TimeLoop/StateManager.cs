@@ -5,9 +5,7 @@ public class StateManager : MonoBehaviour
 {
     public static StateManager Instance;
 
-    private HashSet<string> collectedItems = new HashSet<string>();
     private HashSet<string> defeatedEnemies = new HashSet<string>();
-    private HashSet<string> interactedNPCs = new HashSet<string>();
 
     private void Awake()
     {
@@ -17,33 +15,24 @@ public class StateManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    public void RegisterItem(string itemID) => collectedItems.Add(itemID);
-    public bool HasItem(string itemID) => collectedItems.Contains(itemID);
+    public void RegisterDefeatedEnemy(string enemyName)
+    {
+        if (!defeatedEnemies.Contains(enemyName))
+        {
+            defeatedEnemies.Add(enemyName);
+        }
+    }
 
-    public void RegisterDefeatedEnemy(string enemyID) => defeatedEnemies.Add(enemyID);
-    public bool IsEnemyDefeated(string enemyID) => defeatedEnemies.Contains(enemyID);
-
-    public void RegisterNPCInteraction(string npcID) => interactedNPCs.Add(npcID);
-    public bool HasInteractedWithNPC(string npcID) => interactedNPCs.Contains(npcID);
+    public bool IsEnemyDefeated(string enemyName)
+    {
+        return defeatedEnemies.Contains(enemyName);
+    }
 
     public void ResetWorld()
     {
-        foreach (ResettableNPC npc in FindObjectsOfType<ResettableNPC>())
-        {
-            if (!interactedNPCs.Contains(npc.npcID))
-                npc.ResetState();
-        }
-
-        foreach (RespawnableEnemy enemy in FindObjectsOfType<RespawnableEnemy>())
-        {
-            if (!defeatedEnemies.Contains(enemy.enemyID))
-                enemy.Respawn();
-        }
-
-        foreach (CollectibleItem item in FindObjectsOfType<CollectibleItem>())
-        {
-            if (!collectedItems.Contains(item.itemID))
-                item.Respawn();
-        }
+        Debug.Log("Resetting world state...");
+        // Let enemies decide what to do during reset
+        // Optionally reset world objects or puzzles here
     }
 }
+
