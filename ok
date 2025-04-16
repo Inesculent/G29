@@ -1,0 +1,216 @@
+[33mcommit cca53d9ec584ecc602e6c56c801234abc8531249[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Inesculent <inesculent@gmail.com>
+Date:   Wed Apr 16 07:49:57 2025 -0400
+
+    Added assets, changed AI
+
+[1mdiff --git a/.vscode/settings.json b/.vscode/settings.json[m
+[1mindex c742afbc..7cc30945 100644[m
+[1m--- a/.vscode/settings.json[m
+[1m+++ b/.vscode/settings.json[m
+[36m@@ -51,5 +51,5 @@[m
+         "temp/": true,[m
+         "Temp/": true[m
+     },[m
+[31m-    "dotnet.defaultSolution": "G29.sln"[m
+[32m+[m[32m    "dotnet.defaultSolution": "Group 29.sln"[m
+ }[m
+\ No newline at end of file[m
+[1mdiff --git a/Assets/Scenes/SampleScene.unity b/Assets/Scenes/SampleScene.unity[m
+[1mindex bdfedb46..dcf57cbd 100644[m
+[1m--- a/Assets/Scenes/SampleScene.unity[m
+[1m+++ b/Assets/Scenes/SampleScene.unity[m
+[36m@@ -105,7 +105,7 @@[m [mNavMeshSettings:[m
+   m_BuildSettings:[m
+     serializedVersion: 3[m
+     agentTypeID: 0[m
+[31m-    agentRadius: 0.5[m
+[32m+[m[32m    agentRadius: 0.3[m
+     agentHeight: 2[m
+     agentSlope: 45[m
+     agentClimb: 0.4[m
+[36m@@ -113,7 +113,7 @@[m [mNavMeshSettings:[m
+     maxJumpAcrossDistance: 0[m
+     minRegionArea: 2[m
+     manualCellSize: 0[m
+[31m-    cellSize: 0.16666667[m
+[32m+[m[32m    cellSize: 0.1[m
+     manualTileSize: 0[m
+     tileSize: 256[m
+     buildHeightMesh: 0[m
+[36m@@ -398,7 +398,7 @@[m [mRectTransform:[m
+   m_PrefabAsset: {fileID: 0}[m
+   m_GameObject: {fileID: 7337441}[m
+   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}[m
+[31m-  m_LocalPosition: {x: 0, y: 0, z: 0.013002396}[m
+[32m+[m[32m  m_LocalPosition: {x: 0, y: 0, z: 1.0896183}[m
+   m_LocalScale: {x: 1, y: 1, z: 1}[m
+   m_ConstrainProportionsScale: 0[m
+   m_Children:[m
+[36m@@ -407,7 +407,7 @@[m [mRectTransform:[m
+   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}[m
+   m_AnchorMin: {x: 0, y: 0}[m
+   m_AnchorMax: {x: 0, y: 0}[m
+[31m-  m_AnchoredPosition: {x: 0.5209999, y: 1.7420001}[m
+[32m+[m[32m  m_AnchoredPosition: {x: 1.1180847, y: 1.7420001}[m
+   m_SizeDelta: {x: 1.0161, y: 0.171}[m
+   m_Pivot: {x: 0.5, y: 0.5}[m
+ --- !u!114 &7337443[m
+[36m@@ -473,6 +473,37 @@[m [mCanvas:[m
+   m_SortingLayerID: 0[m
+   m_SortingOrder: 0[m
+   m_TargetDisplay: 0[m
+[32m+[m[32m--- !u!1 &13827887[m
+[32m+[m[32mGameObject:[m
+[32m+[m[32m  m_ObjectHideFlags: 0[m
+[32m+[m[32m  m_CorrespondingSourceObject: {fileID: 0}[m
+[32m+[m[32m  m_PrefabInstance: {fileID: 0}[m
+[32m+[m[32m  m_PrefabAsset: {fileID: 0}[m
+[32m+[m[32m  serializedVersion: 6[m
+[32m+[m[32m  m_Component:[m
+[32m+[m[32m  - component: {fileID: 13827888}[m
+[32m+[m[32m  m_Layer: 0[m
+[32m+[m[32m  m_Name: B-ringFinger03.L[m
+[32m+[m[32m  m_TagString: Untagged[m
+[32m+[m[32m  m_Icon: {fileID: 0}[m
+[32m+[m[32m  m_NavMeshLayer: 0[m
+[32m+[m[32m  m_StaticEditorFlags: 0[m
+[32m+[m[32m  m_IsActive: 1[m
+[32m+[m[32m--- !u!4 &13827888[m
+[32m+[m[32mTransform:[m
+[32m+[m[32m  m_ObjectHideFlags: 0[m
+[32m+[m[32m  m_CorrespondingSourceObject: {fileID: 0}[m
+[32m+[m[32m  m_PrefabInstance: {fileID: 0}[m
+[32m+[m[32m  m_PrefabAsset: {fileID: 0}[m
+[32m+[m[32m  m_GameObject: {fileID: 13827887}[m
+[32m+[m[32m  serializedVersion: 2[m
+[32m+[m[32m  m_LocalRotation: {x: 0.02091208, y: 0.040652793, z: 0.015795145, w: 0.9988296}[m
+[32m+[m[32m  m_LocalPosition: {x: -0.00000023204016, y: 0.034861088, z: 0.00000037387693}[m
+[32m+[m[32m  m_LocalScale: {x: 1.0000001, y: 0.9999998, z: 0.9999996}[m
+[32m+[m[32m  m_ConstrainProportionsScale: 0[m
+[32m+[m[32m  m_Children: [][m
+[32m+[m[32m  m_Father: {fileID: 520630818}[m
+[32m+[m[32m  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}[m
+ --- !u!1 &16091113[m
+ GameObject:[m
+   m_ObjectHideFlags: 0[m
+[36m@@ -491,7 +522,7 @@[m [mGameObject:[m
+   m_TagString: Untagged[m
+   m_Icon: {fileID: 0}[m
+   m_NavMeshLayer: 0[m
+[31m-  m_StaticEditorFlags: 2147483647[m
+[32m+[m[32m  m_StaticEditorFlags: 0[m
+   m_IsActive: 1[m
+ --- !u!65 &16091114[m
+ BoxCollider:[m
+[36m@@ -596,7 +627,7 @@[m [mMonoBehaviour:[m
+   Speed: 1[m
+   RotationAmount: 90[m
+   ForwardDirection: 0[m
+[31m-  SlideDirection: {x: 0, y: 0, z: -1}[m
+[32m+[m[32m  SlideDirection: {x: 0, y: -1, z: 0}[m
+   SlideAmount: 10[m
+ --- !u!1 &16343866[m
+ GameObject:[m
+[36m@@ -703,89 +734,6 @@[m [mTransform:[m
+   m_Children: [][m
+   m_Father: {fileID: 0}[m
+   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}[m
+[31m---- !u!1 &17457011[m
+[31m-GameObject:[m
+[31m-  m_ObjectHideFlags: 0[m
+[31m-  m_CorrespondingSourceObject: {fileID: 0}[m
+[31m-  m_PrefabInstance: {fileID: 0}[m
+[31m-  m_PrefabAsset: {fileID: 0}[m
+[31m-  serializedVersion: 6[m
+[31m-  m_Component:[m
+[31m-  - component: {fileID: 17457012}[m
+[31m-  - component: {fileID: 17457014}[m
+[31m-  - component: {fileID: 17457013}[m
+[31m-  m_Layer: 0[m
+[31m-  m_Name: Plank[m
+[31m-  m_TagString: Untagged[m
+[31m-  m_Icon: {fileID: 0}[m
+[31m-  m_NavMeshLayer: 0[m
+[31m-  m_StaticEditorFlags: 2147483647[m
+[31m-  m_IsActive: 1[m
+[31m---- !u!4 &17457012[m
+[31m-Transform:[m
+[31m-  m_ObjectHideFlags: 0[m
+[31m-  m_CorrespondingSourceObject: {fileID: 0}[m
+[31m-  m_PrefabInstance: {fileID: 0}[m
+[31m-  m_PrefabAsset: {fileID: 0}[m
+[31m-  m_GameObject: {fileID: 17457011}[m
+[31m-  serializedVersion: 2[m
+[31m-  m_LocalRotation: {x: -0.0000004172325, y: -0.7071068, z: -0.7071068, w: 0.0000004172325}[m
+[31m-  m_LocalPosition: {x: 0.066533454, y: 2.409555, z: -10.3649025}[m
+[31m-  m_LocalScale: {x: 0.1681337, y: 10.018163, z: 16.07518}[m
+[31m-  m_ConstrainProportionsScale: 0[m
+[31m-  m_Children: [][m
+[31m-  m_Father: {fileID: 1501965139}[m
+[31m-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}[m
+[31m---- !u!23 &17457013[m
+[31m-MeshRenderer:[m
+[31m-  m_ObjectHideFlags: 0[m
+[31m-  m_CorrespondingSourceObject: {fileID: 0}[m
+[31m-  m_PrefabInstance: {fileID: 0}[m
+[31m-  m_PrefabAsset: {fileID: 0}[m
+[31m-  m_GameObject: {fileID: 17457011}[m
+[31m-  m_Enabled: 1[m
+[31m-  m_CastShadows: 1[m
+[31m-  m_ReceiveShadows: 1[m
+[31m-  m_DynamicOccludee: 1[m
+[31m-  m_StaticShadowCaster: 0[m
+[31m-  m_MotionVectors: 1[m
+[31m-  m_LightProbeUsage: 1[m
+[31m-  m_ReflectionProbeUsage: 1[m
+[31m-  m_RayTracingMode: 2[m
+[31m-  m_RayTraceProcedural: 0[m
+[31m-  m_RenderingLayerMask: 1[m
+[31m-  m_RendererPriority: 0[m
+[31m-  m_Materials:[m
+[31m-  - {fileID: 2100000, guid: d8287e834d1f76c439e98c31f35dff41, type: 2}[m
+[31m-  m_StaticBatchInfo:[m
+[31m-    firstSubMesh: 0[m
+[31m-    subMeshCount: 0[m
+[31m-  m_StaticBatchRoot: {fileID: 0}[m
+[31m-  m_ProbeAnchor: {fileID: 0}[m
+[31m-  m_LightProbeVolumeOverride: {fileID: 0}[m
+[31m-  m_ScaleInLightmap: 1[m
+[31m-  m_ReceiveGI: 1[m
+[31m-  m_PreserveUVs: 0[m
+[31m-  m_IgnoreNormalsForChartDetection: 0[m
+[31m-  m_ImportantGI: 0[m
+[31m-  m_StitchLightmapSeams: 1[m
+[31m-  m_SelectedEditorRenderState: 3[m
+[31m-  m_MinimumChartSize: 4[m
+[31m-  m_AutoUVMaxDistance: 0.5[m
+[31m-  m_AutoUVMaxAngle: 89[m
+[31m-  m_LightmapParameters: {fileID: 0}[m
+[31m-  m_SortingLayerID: 0[m
+[31m-  m_SortingLayer: 0[m
+[31m-  m_SortingOrder: 0[m
+[31m-  m_AdditionalVertexStreams: {fileID: 0}[m
+[31m---- !u!33 &17457014[m
+[31m-MeshFilter:[m
+[31m-  m_ObjectHideFlags: 0[m
+[31m-  m_CorrespondingSourceObject: {fileID: 0}[m
+[31m-  m_PrefabInstance: {fileID: 0}[m
+[31m-  m_PrefabAsset: {fileID: 0}[m
+[31m-  m_GameObject: {fileID: 17457011}[m
+[31m-  m_Mesh: {fileID: -5053925668127403250, guid: ab6968b54f6f5ed4688b460b99e3ef80, type: 3}[m
+ --- !u!1 &17556954[m
+ GameObject:[m
+   m_ObjectHideFlags: 0[m
+[36m@@ -869,6 +817,38 @@[m [mTransform:[m
+   m_Children: [][m
+   m_Father: {fileID: 0}[m
+   m_LocalEulerAnglesHint: {x: -42.904, y: 0, z: 0}[m
+[32m+[m[32m--- !u!1 &20555491[m
+[32m+[m[32mGameObject:[m
+[32m+[m[32m  m_ObjectHideFlags: 0[m
+[32m+[m[32m  m_CorrespondingSourceObject: {fileID: 0}[m
+[32m+[m[32m  m_PrefabInstance: {fileID: 0}[m
+[32m+[m[32m  m_PrefabAsset: {fileID: 0}[m
+[32m+[m[32m  serializedVersion: 6[m
+[32m+[m[32m  m_Compo
