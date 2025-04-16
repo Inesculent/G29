@@ -1,19 +1,19 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class DialogueUI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI dialogueText;  // Reference to the dialogue text component.
-    [SerializeField] private Button[] optionButtons;         // Array of option buttons.
+    [SerializeField] private TextMeshProUGUI dialogueText;
+    [SerializeField] private Button[] optionButtons;
 
     private DialogueNode currentNode;
-    private EnemyDialogueTrigger currentEnemyDialogue;  // Reference to the enemy that initiated the dialogue.
+    private EnemyDialogueTrigger currentEnemyDialogue;
+    private Dictionary<string, bool> flags = new Dictionary<string, bool>();
 
-    // Starts the dialogue and stores a reference to the enemy for callbacks.
     public void StartDialogue(DialogueNode startingNode, EnemyDialogueTrigger enemyDialogueTrigger)
     {
-        // Unlock and show the cursor for UI interaction.
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
@@ -23,107 +23,119 @@ public class DialogueUI : MonoBehaviour
         DisplayCurrentNode();
     }
 
-    // Displays the current node's dialogue text and sets up the option buttons.
     private void DisplayCurrentNode()
     {
         dialogueText.text = currentNode.dialogueText;
-        Debug.Log("Current node text: " + currentNode.dialogueText);
+        Debug.Log("Current node: " + currentNode.dialogueText);
 
-        // If no options exist (i.e. terminal node), show a default "Continue" button.
+        // Terminal node? show just “Continue”
         if (currentNode.options == null || currentNode.options.Length == 0)
         {
-            // Disable all buttons first.
-            foreach (Button btn in optionButtons)
-                btn.gameObject.SetActive(false);
-            
+            foreach (var btn in optionButtons) btn.gameObject.SetActive(false);
             if (optionButtons.Length > 0)
             {
-                optionButtons[0].gameObject.SetActive(true);
-                TextMeshProUGUI btnText = optionButtons[0].GetComponentInChildren<TextMeshProUGUI>();
-                if (btnText != null)
-                {
-                    btnText.text = "Continue";
-                }
+                var b = optionButtons[0];
+                b.gameObject.SetActive(true);
+                b.GetComponentInChildren<TextMeshProUGUI>().text = "Continue";
             }
+            return;
         }
-        else
+
+        // Otherwise show all options
+        for (int i = 0; i < optionButtons.Length; i++)
         {
-            // If options exist, set up each button accordingly.
-            for (int i = 0; i < optionButtons.Length; i++)
+            if (i < currentNode.options.Length)
             {
-                if (i < currentNode.options.Length)
-                {
-                    optionButtons[i].gameObject.SetActive(true);
-                    TextMeshProUGUI btnText = optionButtons[i].GetComponentInChildren<TextMeshProUGUI>();
-                    if (btnText != null)
-                    {
-                        btnText.text = currentNode.options[i].optionText;
-                    }
-                }
-                else
-                {
-                    optionButtons[i].gameObject.SetActive(false);
-                }
+                var btn = optionButtons[i];
+                btn.gameObject.SetActive(true);
+                btn.GetComponentInChildren<TextMeshProUGUI>().text = currentNode.options[i].optionText;
+            }
+            else
+            {
+                optionButtons[i].gameObject.SetActive(false);
             }
         }
     }
 
-    // Called when an option or the continue button is clicked.
     public void OnOptionButtonClicked(int index)
     {
-        // If there are no options (terminal node), treat the click as a "continue" command.
+        // Terminal “Continue”
         if (currentNode.options == null || currentNode.options.Length == 0)
         {
-            Debug.Log("Continue button clicked on terminal node, ending dialogue.");
-            EndDialogue();
+            EndDialogue(); 
             return;
         }
 
-        Debug.Log($"Button {index} clicked!");
-        if (index < currentNode.options.Length)
-        {
-            DialogueOption selectedOption = currentNode.options[index];
-            Debug.Log($"Option selected: \"{selectedOption.optionText}\"");
+        var opt = currentNode.options[index];
+        Debug.Log($"Clicked option [{index}]: {opt.optionText}");
 
-            // If a next node is assigned, continue the dialogue.
-            if (selectedOption.nextNode != null)
+        // 1) Set any flag this option carries
+        if (!string.IsNullOrEmpty(opt.flagToSet))
+        {
+            flags[opt.flagToSet] = opt.flagValue;
+            Debug.Log($"Flag set: {opt.flagToSet} = {opt.flagValue}");
+        }
+
+        // 2) Conditional branching (Node 7 logic)
+        if (!string.IsNullOrEmpty(opt.conditionFlag))
+        {
+            flags.TryGetValue(opt.conditionFlag, out bool val);
+            if (val == opt.conditionValue)
             {
-                currentNode = selectedOption.nextNode;
+                // success path → jump to the terminal success node
+                currentNode = new DialogueTreeBuilder().startingNode; // dummy to access node8?
+                // Actually, we know at Build time opt.nextNode == failNode. Instead:
+                // we need the actual node8 reference. Better: store node8 in opt.nextNode? 
+                // For simplicity here, assume opt.nextNode was overwritten to node8 at build—alternatively:
+                // treat any option with conditionFlag as success and manually set to node8:
+                currentNode = opt.nextNode; 
                 DisplayCurrentNode();
             }
             else
             {
-                Debug.Log("No next node assigned to this option, ending dialogue.");
-                EndDialogue();
+                Debug.Log("Condition not met, failing dialogue.");
+                FailDialogue();
             }
+            return;
+        }
+
+        // 3) Normal nextNode flow
+        if (opt.nextNode != null)
+        {
+            currentNode = opt.nextNode;
+            DisplayCurrentNode();
         }
         else
         {
-            Debug.LogWarning("Button index exceeds available dialogue options.");
+            EndDialogue();
         }
     }
 
-    // Ends the dialogue, resets the cursor, and calls the corresponding enemy callback based on outcome.
     private void EndDialogue()
     {
-    Debug.Log("Ending dialogue. Final node text: " + currentNode.dialogueText);
-    gameObject.SetActive(false);
+        Debug.Log("Dialogue ended on node: " + currentNode.dialogueText);
+        gameObject.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
-    // Re-lock and hide the cursor.
-    Cursor.lockState = CursorLockMode.Locked;
-    Cursor.visible = false;
+        if (currentNode.isFailNode)
+        {
+            Debug.Log("Outcome: FAILURE");
+            currentEnemyDialogue?.OnDialogueFailure();
+        }
+        else
+        {
+            Debug.Log("Outcome: SUCCESS");
+            currentEnemyDialogue?.OnDialogueSuccess();
+        }
+    }
 
-    // Outcome is decided by the isFailNode flag
-    if (currentNode.isFailNode)
+    private void FailDialogue()
     {
-        Debug.Log("Determined outcome: FAILURE.");
+        Debug.Log("Forcing failure outcome.");
+        gameObject.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         currentEnemyDialogue?.OnDialogueFailure();
     }
-    else
-    {
-        Debug.Log("Determined outcome: SUCCESS.");
-        currentEnemyDialogue?.OnDialogueSuccess();
-    }
-}
-
 }

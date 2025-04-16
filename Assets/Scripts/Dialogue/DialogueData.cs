@@ -5,16 +5,24 @@ using UnityEngine;
 public class DialogueOption
 {
     public string optionText;
-    public DialogueNode nextNode;  // Reference to the next dialogue node.
+    public DialogueNode nextNode;
+
+    // New: when this option is chosen, set flags[flagToSet] = flagValue
+    public string flagToSet;
+    public bool flagValue;
+
+    // New: to use on a terminal branching node (Node 7)
+    //   if flags[conditionFlag] == conditionValue → follow nextNode
+    //   else → immediate failure
+    public string conditionFlag;
+    public bool conditionValue;
 }
 
 [Serializable]
 public class DialogueNode
 {
     [TextArea]
-    public string dialogueText;    // What is displayed for this node.
-    public DialogueOption[] options; // Options that the player can choose.
-
-    // Checks to see if it's a fail node
+    public string dialogueText;
+    public DialogueOption[] options;
     public bool isFailNode;
 }
